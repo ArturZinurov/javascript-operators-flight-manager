@@ -1,7 +1,7 @@
 const passengers = require("./passengers");
 
 function Util() {
-    calculateTotalDistributedPassangers = (distributedPassengers) => {
+    calculateTotalDistributedPassengers = (distributedPassengers) => {
         let totalDistributedPassengers = 0;
         let value;
 
@@ -23,7 +23,7 @@ function Util() {
         return totalNumberofPassengers;
     }
 
-    return {calculateTotalDistributedPassangers, calculateTotalNumberOfPassengers};
+    return {calculateTotalDistributedPassengers, calculateTotalNumberOfPassengers};
 }
 
 module.exports = Util();
