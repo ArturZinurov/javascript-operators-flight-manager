@@ -13,38 +13,59 @@ function Passengers() {
         return totalPassangers
     }
     distributeAllSeatsToAllPassengers = (vipPassengers, regularPassengers, flights, vipSeats, regSeats) => {
+        let vipPassengersWithBusinessSeats=0, vipPassengersWithEconomySeats=0, regularPassengersWithBusinessSeats=0, regularPassengersWithEconomySeats=0;
         let availableVipSeats = flights * vipSeats;
         let availableRegSeats = flights * regSeats;
-        let seatVIP = "VIP";
-        let seatREG = "Regular"
 
-        getSeatsLeft = (seatsType ,passangerType, seatName) => {
-            while (seatsType > 0) {
-                if (passangerType > 0) {
-                    seatsType -= passangerType;
-                    if (seatsType == 0) {
-                        return ("All "+ seatName+" seats are taken!")
-                    }
-                    return seatsType;
-                }
-            }
-        }
-        getPassangersSeated = (seatsType ,seatsLeft ,passangerType) => {
-            while (passangerType > 0) {
-                if (seatsType > 0) {
-                    seatsTaken = seatsType - seatsLeft
-                    return seatsTaken 
-                }
-            }
-        }
+        var vipBusinessConfiguration = {passengers:vipPassengers, seats:availableVipSeats};
+        vipPassengersWithBusinessSeats = updateConfiguration(vipBusinessConfiguration, vipSeats);
+
+        var vipEconomyConfiguration = {passengers:vipPassengers, seats:availableRegSeats};
+        vipPassengersWithEconomySeats = updateConfiguration(vipEconomyConfiguration, regSeats);
+
+        var regBussinessConfiguration = {passengers:regularPassengers, seats:availableVipSeats};
+        regularPassengersWithBusinessSeats = updateConfiguration(regBussinessConfiguration, vipSeats);
+
+        var regEconomyConfiguration = {passengers:regularPassengers, availableRegSeats};
+        regularPassengersWithEconomySeats = updateConfiguration(regEconomyConfiguration, regSeats);
+
+        return {vipPassengersWithBusinessSeats:vipPassengersWithBusinessSeats,
+                vipPassengersWithEconomySeats:vipPassengersWithEconomySeats,
+                regularPassengersWithBusinessSeats:regularPassengersWithBusinessSeats,
+                regularPassengersWithEconomySeats:regularPassengersWithEconomySeats};
+
+    }    
         
-
-        let vipPassengersWithBusinessSeats = getPassangersSeated(availableVipSeats, getSeatsLeft(availableVipSeats,vipPassengers, seatVIP), vipPassengers)
-        let regPassengersWithBusinessSeats = getSeatsLeft(availableVipSeats, regularPassengers, seatVIP);
-
-        return {vipPassengersWithBusinessSeats:vipPassengersWithBusinessSeats, vipPassengersWithRegSeats:vipPassengers, regularPassengersWithVipSeats:regularPassengers, regularPassengerswithRegSeats:regularPassengers}
-    
+    updateConfiguration = (configuration, seatsPerFlight) => {
+        let passengersWithSeats = 0;
+        
+        while (configuration.passengers > 0) {
+            if (configuration.seats > 0) {
+                if (configuration.passengers >= configuration.seats) {
+                    if (configuration.seats > configuration.seatsPerFlight) {
+                        configuration.passengers -= seatsPerFlight;
+                        configuration.seats -= seatsPerFlight;
+                        passengersWithSeats += seatsPerFlight;
+                    } else {
+                        configuration.passengers -= configuration.seats;
+                        passengersWithSeats += configuration.seats;
+                        configuration.seats = 0;
+                    }
+                } else {
+                    passengersWithSeats += configuration.passengers;
+                    configuration.seats -= configuration.passengers;
+                    configuration.passengers = 0;
+                }
+            } else {
+                break;
+            }
+        }
+    return passengersWithSeats;
     }
+        
+    
+    
+    
     return {checkFlightCapacity, distributeAllSeatsToAllPassengers};
 }
 
