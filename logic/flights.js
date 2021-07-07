@@ -32,7 +32,7 @@ function Flights() {
             return "The revision needs to be done within the next month";
         }
         if (totalDistance => distanceLimit) {
-            throw new Error("Flight maximum allowed distance" + distanceLimit + " exceeded No Flying!!!")
+            throw new Error("Flight maximum allowed distance " + distanceLimit + " exceeded No Flying!!!")
         }
     }
     
